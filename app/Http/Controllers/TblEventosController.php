@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\http\Models\tbleventos;
+use App\Models\tblEventos;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Validate;
 
 class TblEventosController extends Controller
 {
@@ -26,23 +26,23 @@ class TblEventosController extends Controller
     //para salvar os registros na tabela evento
     public function CadastroEventos(Request $request)
     {
-        $registros = $request->validator([
+        $registros = $request->validate([
             'nomeEvento' => 'string|required',
-            'dataEvento' => 'date' | 'required',
-            'localEvento' => 'string' | 'required',
-            'imgEvento' => 'string' | 'required'
+            'dataEvento' => 'date|required',
+            'localEvento' => 'string|required',
+            'imgEvento' => 'string|required'
         ]);
 
 
-        tblEvento::create($registros);
+        TblEventoS::create($registros);
         return Redirect::route('home-adm');
     }
 
 
     //para apagar os registros na tabela de eventos
-    public function destroy(tblEventos $id)
+    public function Destroy(tblEventos $id)
     {
-        $id->delete();
+        $id->delete();//apaga o registro escolhido
         return Redirect::route('home-adm');
     }
 
@@ -50,11 +50,11 @@ class TblEventosController extends Controller
 
     public function Update(tblEventos $id, Request $request)
     {
-        $registros = $request->validator([
+        $registros = $request->validate([
             'nomeEvento' => 'string|required',
-            'dataEvento' => 'date' | 'required',
-            'localEvento' => 'string' | 'required',
-            'imgEvento' => 'string' | 'required'
+            'dataEvento' => 'date | required',
+            'localEvento' => 'string|required',
+            'imgEvento' => 'string|required'
         ]);
         $id->fill($registros);
         $id->save();
@@ -64,7 +64,7 @@ class TblEventosController extends Controller
 
     //Para mostrar somente os eventos por código 
     public function MostrarEventoCodigo(tblEventos $id){
-        return view('altera-evento',['registrosEventos'=>$id]);
+        return view('alteraevento',['registrosEvento'=>$id]);
     }
 
     // Para buscar os eventos por nome
@@ -74,7 +74,7 @@ class TblEventosController extends Controller
             $query->where('nomeEvento','like','%',$valor,'%');
         });
         $todosRegistros = $registros->get();
-        return view('listaEventos',['registrosEventos'=>$todosRegistros]);
+        return view('listaEventos',['registrosEvento'=>$todosRegistros]);
     }
 
 
